@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning REA — Reverse Engineering Roadmap</title>
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --card: rgba(28, 28, 30, 0.72);
+    --text: #f5f5f7;
+    --secondary: #a1a1a6;
+    --accent: #2997ff;
+    --accent-hover: #64b5ff;
+    --border: rgba(255, 255, 255, 0.08);
+    --glow: rgba(41, 151, 255, 0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+  a:hover { color: var(--accent-hover); }
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  header {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(0,0,0,0.72);
+    border-bottom: 1px solid var(--border);
+  }
+  nav { display: flex; justify-content: space-between; align-items: center; height: 52px; }
+  .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 28px; font-size: 0.875rem; }
+  .nav-links a { color: var(--secondary); }
+  .nav-links a:hover { color: var(--text); }
+  .hero {
+    padding: 120px 0 80px;
+    text-align: center;
+    background: radial-gradient(ellipse at center top, var(--glow) 0%, transparent 70%);
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 1.25rem;
+    color: var(--secondary);
+    max-width: 640px;
+    margin: 0 auto 32px;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 980px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn:hover { background: var(--accent-hover); transform: scale(1.03); color: #fff; }
+  section { padding: 80px 0; }
+  section h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+  .section-sub { color: var(--secondary); font-size: 1.125rem; margin-bottom: 40px; max-width: 640px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    border-color: rgba(41,151,255,0.3);
+  }
+  .card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.015em; }
+  .card p, .card li { color: var(--secondary); font-size: 0.95rem; }
+  .card ol, .card ul { padding-left: 20px; margin-top: 12px; }
+  .card li { margin-bottom: 8px; }
+  .install-box {
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.95rem;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .path-box {
+    background: linear-gradient(135deg, rgba(41,151,255,0.08), transparent);
+    border: 1px solid rgba(41,151,255,0.2);
+    border-radius: 18px;
+    padding: 32px;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    margin-top: 40px;
+  }
+  footer {
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--secondary);
+    font-size: 0.875rem;
+  }
+  footer strong { color: var(--text); }
+  .contact { margin-top: 8px; }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 80px 0 60px; }
+    section { padding: 60px 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav class="container">
+    <div class="logo">REA Roadmap</div>
+    <div class="nav-links">
+      <a href="#start">Start</a>
+      <a href="#watch">Watch</a>
+      <a href="#cases">Cases</a>
+      <a href="#repos">Repos</a>
+      <a href="#learn">Learn</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Learning REA<br>Reverse Engineering Roadmap</h1>
+    <p>Stop wasting hours trying to learn REA. One practical roadmap with tutorials, real investigations, GitHub repos, books, papers and free courses.</p>
+    <a href="https://rea.tools" class="btn" target="_blank">Visit rea.tools</a>
+  </div>
+</section>
+
+<section id="start">
+  <div class="container">
+    <h2>Start Here</h2>
+    <p class="section-sub">Official entry points and your first investigation.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>1. REA Official Repository</h3>
+        <p>Code, installation, releases and documentation.</p>
+        <p style="margin-top:12px"><a href="https://github.com/morluto/rea" target="_blank">github.com/morluto/rea →</a></p>
+      </div>
+      <div class="card">
+        <h3>2. REA Official Website</h3>
+        <p>The fastest overview of what the tool can do.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools" target="_blank">rea.tools →</a></p>
+      </div>
+      <div class="card">
+        <h3>3. Installation & Agent Setup</h3>
+        <p>Connect Claude Code, Codex, Cursor, Gemini CLI and other agents.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools" target="_blank">Setup guides →</a></p>
+      </div>
+      <div class="card">
+        <h3>4. Your First REA Investigation</h3>
+        <p>Trace an Export button through the renderer, preload, IPC and CSV writer.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools/first-investigation/" target="_blank">First Investigation →</a></p>
+      </div>
+      <div class="card">
+        <h3>5. REA Guides</h3>
+        <p>Separate paths for native binaries, Electron and browser runtime.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools/guides/" target="_blank">Guides →</a></p>
+      </div>
+      <div class="card">
+        <h3>6. Guided MCP Prompts</h3>
+        <p>Ready-made workflows: investigate_feature, compare_application_versions, verify_reconstruction, trace_crash.</p>
+        <p style="margin-top:12px"><a href="https://github.com/morluto/rea" target="_blank">See repo →</a></p>
+      </div>
+    </div>
+    <div class="install-box">npx rea-agents@latest setup</div>
+  </div>
+</section>
+
+<section id="watch" style="background: #0a0a0a;">
+  <div class="container">
+    <h2>Watch & Follow Along</h2>
+    <p class="section-sub">Tutorials and practical walkthroughs.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>How To Use REA To Clone Any Software In Minutes</h3>
+        <p>Install REA and try to build a local voice-to-text tool.</p>
+        <p style="margin-top:12px"><a href="https://www.youtube.com/watch?v=FnB9tHKBJXQ" target="_blank">Watch on YouTube →</a></p>
+      </div>
+      <div class="card">
+        <h3>REA + Pi Coding Agent Tutorial</h3>
+        <p>Investigate the Chrome Dinosaur Game and build your own version.</p>
+      </div>
+      <div class="card">
+        <h3>Ghidra Tutorial for Beginners</h3>
+        <p>Import a binary, find main, use the decompiler and basic navigation.</p>
+        <p style="margin-top:12px"><a href="https://ghidra-sre.org/" target="_blank">Ghidra →</a></p>
+      </div>
+      <div class="card">
+        <h3>Frida for Android Reverse Engineering</h3>
+        <p>Dynamic observation of an Android app’s Java methods.</p>
+        <p style="margin-top:12px"><a href="https://frida.re/" target="_blank">Frida →</a></p>
+      </div>
+      <div class="card">
+        <h3>pwn.college Reverse Engineering</h3>
+        <p>Short videos and challenges with real binaries.</p>
+        <p style="margin-top:12px"><a href="https://pwn.college/program-security/reverse-engineering/" target="_blank">pwn.college →</a></p>
+      </div>
+      <div class="card">
+        <h3>Malware Unicorn RE101</h3>
+        <p>A safe lab, static analysis, debugging and x86.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="container">
+    <h2>Real REA Investigations</h2>
+    <p class="section-sub">Community projects, articles and official cases.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Notes Export</h3>
+        <p>The best first case: button → IPC → CSV.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools/first-investigation/" target="_blank">Start here →</a></p>
+      </div>
+      <div class="card">
+        <h3>Notion Clipboard</h3>
+        <p>How Notion moves text, HTML and structured block data through Electron.</p>
+      </div>
+      <div class="card">
+        <h3>DX-Ball Reconstruction</h3>
+        <p>A function from an .exe becomes verifiable C code. Checked on 3,205 inputs; compiled result matched the original 63 bytes.</p>
+        <p style="margin-top:12px"><a href="https://rea.tools/showcase/dx-ball/" target="_blank">Official showcase →</a> · <a href="https://github.com/N0zoM1z0/dx-ball" target="_blank">GitHub →</a></p>
+      </div>
+      <div class="card">
+        <h3>Aegis APK</h3>
+        <p>APK → find the algorithm → local code-generator implementation.</p>
+      </div>
+      <div class="card">
+        <h3>TH04 Bullet Patterns</h3>
+        <p>16-bit DOS code → a readable C++ implementation.</p>
+      </div>
+      <div class="card">
+        <h3>CTF Flag Checker</h3>
+        <p>Binary → conditions → equations → check against the original program.</p>
+      </div>
+      <div class="card">
+        <h3>Chrome Dinosaur Speed</h3>
+        <p>Browser runtime → speed-up rule → your own mini-game.</p>
+      </div>
+      <div class="card">
+        <h3>171 REA Cases</h3>
+        <p>Community projects, articles and official cases in one index.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="repos" style="background: #0a0a0a;">
+  <div class="container">
+    <h2>GitHub Repos</h2>
+    <p class="section-sub">Essential tools and collections.</p>
+    <div class="grid">
+      <div class="card"><h3>morluto/rea</h3><p>Main REA engine, CLI and MCP server.</p><p style="margin-top:8px"><a href="https://github.com/morluto/rea" target="_blank">Open →</a></p></div>
+      <div class="card"><h3>awesome-reverse-engineering</h3><p>Tools for binaries, apps, firmware, formats and protocols.</p><p style="margin-top:8px"><a href="https://github.com/morluto/awesome-reverse-engineering" target="_blank">Open →</a></p></div>
+      <div class="card"><h3>sqwu/rea-gems</h3><p>A gallery of projects built with REA.</p></div>
+      <div class="card"><h3>alexgaoth/awesome-reverse-engineered</h3><p>Thousands of open-source reconstructions of apps, games, APIs and devices.</p></div>
+      <div class="card"><h3>NSA Ghidra</h3><p>Free disassembler and decompiler for native binaries.</p><p style="margin-top:8px"><a href="https://ghidra-sre.org/" target="_blank">ghidra-sre.org →</a></p></div>
+      <div class="card"><h3>JADX</h3><p>APK and DEX → readable Java code.</p><p style="margin-top:8px"><a href="https://github.com/skylot/jadx" target="_blank">GitHub →</a></p></div>
+      <div class="card"><h3>Frida</h3><p>Observe and instrument a running application.</p><p style="margin-top:8px"><a href="https://frida.re/" target="_blank">frida.re →</a></p></div>
+      <div class="card"><h3>ILSpy</h3><p>.NET decompilation.</p><p style="margin-top:8px"><a href="https://github.com/icsharpcode/ILSpy" target="_blank">GitHub →</a></p></div>
+      <div class="card"><h3>x64dbg</h3><p>Windows debugger.</p><p style="margin-top:8px"><a href="https://x64dbg.com/" target="_blank">x64dbg.com →</a></p></div>
+      <div class="card"><h3>Cutter</h3><p>Free graphical reverse-engineering platform.</p><p style="margin-top:8px"><a href="https://cutter.re/" target="_blank">cutter.re →</a></p></div>
+      <div class="card"><h3>angr</h3><p>Program analysis and symbolic execution.</p><p style="margin-top:8px"><a href="https://angr.io/" target="_blank">angr.io →</a></p></div>
+      <div class="card"><h3>LLM4Decompile</h3><p>Models that recover C-like code from binaries.</p><p style="margin-top:8px"><a href="https://github.com/albertan017/LLM4Decompile" target="_blank">GitHub →</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="learn">
+  <div class="container">
+    <h2>Books, Papers & Courses</h2>
+    <div class="grid" style="margin-top:32px">
+      <div class="card">
+        <h3>Books</h3>
+        <ol>
+          <li><a href="https://nostarch.com/ghibrabook2" target="_blank">The Ghidra Book, 2nd Edition</a></li>
+          <li><a href="https://beginners.re/" target="_blank">Reverse Engineering for Beginners</a> (free; Russian translation exists)</li>
+          <li>Practical Binary Analysis</li>
+          <li>Practical Malware Analysis</li>
+          <li>The Android Malware Handbook</li>
+          <li>Reversing: Secrets of Reverse Engineering</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Research Papers</h3>
+        <ol>
+          <li><a href="https://arxiv.org/abs/2403.05286" target="_blank">LLM4Decompile</a></li>
+          <li>AutoDecompiler</li>
+          <li>SALT4Decompile</li>
+          <li>Decomperson</li>
+          <li>DIRTY</li>
+          <li>TRex</li>
+          <li>Automatically Attacking Machine RE Agents</li>
+          <li>Does Reverse Engineering Need a Bigger Model?</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Free Courses & Practice</h3>
+        <ol>
+          <li><a href="https://www.youtube.com/playlist?list=PLUFkSN0XLZ-m9B0DhHjkXd8foIMuZO1Gd" target="_blank">OpenSecurityTraining2: x86-64 Assembly</a></li>
+          <li><a href="https://pwn.college/" target="_blank">pwn.college: Reverse Engineering</a></li>
+          <li>pwn.college: Reversing Hell</li>
+          <li>Malware Unicorn RE101</li>
+          <li>Nightmare</li>
+          <li>RPISEC Modern Binary Exploitation</li>
+          <li><a href="https://mas.owasp.org/" target="_blank">OWASP Mobile Application Security</a></li>
+          <li><a href="https://crackmes.one/" target="_blank">Crackmes.one</a></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="path-box">
+      <strong>Best order to learn</strong><br><br>
+      1. Install REA → 2. Do Notes Export → 3. Break down Notion as an Electron app → 4. Solve a CTF binary → 5. Investigate the Aegis APK → 6. Recreate one function from DX-Ball → 7. Only then go to Ghidra, assembly and papers<br><br>
+      <span style="color:var(--secondary)">No need to read everything in order. The whole path:<br>APP → ONE FEATURE → REA EVIDENCE → CLEAN SPEC → LOCAL REBUILD → TEST AGAINST ORIGINAL</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Compiled from the REA reverse engineering roadmap.</p>
+    <p class="contact"><strong>Shoaib Hussan</strong> · Abu Dhabi · <a href="https://x.com/imxhoaib" target="_blank">@imxhoaib</a></p>
+    <p style="margin-top:16px; font-size:0.8rem;">For educational and legal reverse engineering use only. Respect software licenses and laws.</p>
+  </div>
+</footer>
+</body>
+</html>
